@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C#: atdotnet [Default Configuration]",
+            "type": "dotnet",
+            "projectPath": "${workspaceFolder}/atdotnet.csproj",
+            "request": "launch",
+        }
+    ]
+}
