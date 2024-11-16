@@ -1,11 +1,11 @@
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Register the API instance using a factory method
 builder.Services.AddSingleton<WebApplication>(sp =>
 {
-    var apiBuilder = WebApplication.CreateBuilder(args);
+    WebApplicationBuilder apiBuilder = WebApplication.CreateBuilder(args);
     apiBuilder.Logging.ClearProviders(); // Disable logging for the API instance
-    var api = apiBuilder.Build();
+    WebApplication api = apiBuilder.Build();
     api.MapGet("/", () => "Hello World!");
     api.MapGet("/health", () => Results.Ok("Healthy")); // Health check endpoint
     return api;
@@ -14,16 +14,16 @@ builder.Services.AddSingleton<WebApplication>(sp =>
 // Register the hosted service
 builder.Services.AddSingleton<EndpointHostedService>(sp =>
 {
-    var api = sp.GetRequiredService<WebApplication>();
+    WebApplication api = sp.GetRequiredService<WebApplication>();
     return new EndpointHostedService(api);
 });
 builder.Services.AddHostedService(sp => sp.GetRequiredService<EndpointHostedService>());
 
 // Build the app
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 Console.WriteLine("Hello! Please enter your Bluesky/ATproto handle: ");
-var handle = Console.ReadLine();
+string? handle = Console.ReadLine();
 Console.WriteLine($"Hello, {handle}!");
 Console.WriteLine("Looking up PDS via DNS...");
 
@@ -34,7 +34,7 @@ Console.WriteLine("Looking up PDS via DNS...");
  */
 
 Console.WriteLine("PDS found! Starting API...");
-var hostedService = app.Services.GetRequiredService<EndpointHostedService>();
+EndpointHostedService hostedService = app.Services.GetRequiredService<EndpointHostedService>();
 
 // Subscribe to the ApiReady event
 hostedService.ApiReady += (sender, e) =>

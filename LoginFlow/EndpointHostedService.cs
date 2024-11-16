@@ -31,13 +31,13 @@ public class EndpointHostedService : IHostedService
                 await _api.StartAsync(_cts.Token);
 
                 // Retrieve the URL from the WebApplication instance
-                var server = _api.Services.GetRequiredService<Microsoft.AspNetCore.Hosting.Server.IServer>();
-                var addressesFeature = server.Features.Get<Microsoft.AspNetCore.Hosting.Server.Features.IServerAddressesFeature>();
+                Microsoft.AspNetCore.Hosting.Server.IServer server = _api.Services.GetRequiredService<Microsoft.AspNetCore.Hosting.Server.IServer>();
+                Microsoft.AspNetCore.Hosting.Server.Features.IServerAddressesFeature? addressesFeature = server.Features.Get<Microsoft.AspNetCore.Hosting.Server.Features.IServerAddressesFeature>();
 
                 if (addressesFeature != null && addressesFeature.Addresses.Any())
                 {
-                    var address = addressesFeature.Addresses.First();
-                    var uri = new Uri(address);
+                    string address = addressesFeature.Addresses.First();
+                    Uri uri = new Uri(address);
                     OnApiReady(new ApiReadyEventArgs(uri.Host, uri.Port));
                 }
 
